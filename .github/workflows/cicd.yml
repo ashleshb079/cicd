@@ -1,0 +1,17 @@
+ name: docker cicd
+ on:
+   push:
+     branch: [ main ]
+ jobs:
+   build:
+     runs-on: ubuntu-latest
+     steps:
+     - uses: action/checkout@v3
+     - name: build docker image
+       run: docker build -t mynginx .
+     - name: remove old container
+       run: | 
+         docker stop mycont || true
+         docker rm mycont || true
+     - name: create new container
+       run: docker run -d -p 9000:80 --name mycont mynginx
